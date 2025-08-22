@@ -12,7 +12,7 @@ public class Usuario {
     @Column(name = "nombre_usuario", nullable = false, unique = true)
     private String nombreUsuario;
 
-    @Column(name = "contraseña", nullable = false)
+    @Column(name = "contrasenia", nullable = false)
     private String contraseña;
 
     @OneToOne

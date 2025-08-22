@@ -20,7 +20,7 @@ public class EstacionSismologica {
     @Column(name = "latitud", nullable = false)
     private float latitud;
 
-    @Column(name = "lonigtud", nullable = false)
+    @Column(name = "longitud", nullable = false)
     private float longitud;
 
     @Column(name = "nombre", nullable = false)

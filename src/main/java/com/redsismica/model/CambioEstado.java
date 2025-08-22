@@ -27,7 +27,7 @@ public class CambioEstado {
     private Empleado empleadoResponsable;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "motivo_fuera_de_servicio_id")
+    @JoinColumn(name = "cambio_estado_id")
     private List<MotivoFueraDeServicio> motivoFueraDeServicio = new ArrayList<>();
 
     //constructor vacio para JPA
