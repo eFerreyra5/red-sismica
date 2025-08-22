@@ -23,7 +23,7 @@ public class Sismografo {
     private int nroSerie;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cambio_estadp_id") 
+    @JoinColumn(name = "cambio_estado_id") 
     private List<CambioEstado> cambioEstado;
 
     @ManyToOne
