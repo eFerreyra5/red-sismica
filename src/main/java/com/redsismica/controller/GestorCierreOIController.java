@@ -39,8 +39,17 @@ public class GestorCierreOIController {
     // Paso 17: ordenar por fecha
     @GetMapping("/ordenes-ordenadas")
     public List<OrdenDeInspeccion> getOrdenesOrdenadas() {
-        return gestorService.ordenarDatosPorFechaFinalizacion();
+        Empleado empleado = gestorService.buscarEmpleadoLogueado();
+        List<OrdenDeInspeccion> ordenes = gestorService.buscarOICompRealizadas(empleado);
+        return gestorService.ordenarDatosPorFechaFinalizacion(ordenes);
     }
+
+    // Paso 20: seleccionar ordem
+    @PostMapping("/seleccionar")
+     public void tomarSelOI(@RequestParam Long idOrden) {
+        gestorService.tomarSelOI(idOrden);
+    }
+
 
     // Paso 24-25: motivos tipo
     @GetMapping("/motivos")

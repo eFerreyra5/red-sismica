@@ -98,14 +98,26 @@ public class GestorCierreOIService {
     }
 
     //metodo 17 secuencia
-    public List<OrdenDeInspeccion> ordenarDatosPorFechaFinalizacion() {
-        this.ordenesOrdenadas = ordenesCompRealizadas;
-        
+    public List<OrdenDeInspeccion> ordenarDatosPorFechaFinalizacion(List<OrdenDeInspeccion> ordenes) {
+        // Crear una copia de la lista para no modificar la original
+    List<OrdenDeInspeccion> ordenesOrdenadas = new ArrayList<>(ordenes);
+
         ordenesOrdenadas.sort((o1, o2) -> 
             o2.getFechaHoraFinalizacion().compareTo(o1.getFechaHoraFinalizacion()) // más recientes primero
         );
     
         return ordenesOrdenadas;
+    }
+
+    //metodo 20 secuencia
+    public void tomarSelOI(Long idOrden) {
+
+        // Buscar la orden por id
+        OrdenDeInspeccion orden = ordenDeInspeccionRepository.findById(idOrden)
+            .orElseThrow(() -> new RuntimeException("Orden de Inspección no encontrada"));
+
+        // Guardar la orden seleccionada
+        this.ordenSeleccionada = orden;
     }
 
     //metodo 24 secuencia

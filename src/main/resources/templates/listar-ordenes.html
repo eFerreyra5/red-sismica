@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Órdenes</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<section class="form-section">
+    <h2>Órdenes Completamente Realizadas</h2>
+
+    <form th:action="@{/seleccionar-orden}" method="post">
+        <table>
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Fecha/Hora Finalización</th>
+                    <th>Estación Sismológica</th>
+                    <th>ID Sismógrafo</th>
+                    <th>Seleccionar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="orden : ${ordenesCompRealizadas}">
+                    <td th:text="${orden.numeroOrden}"></td>
+                    <td th:text="${orden.fechaHoraFinalizacion}"></td>
+                    <td th:text="${orden.estacion.nombre}"></td>
+                    <td th:text="${orden.estacion.identificadorSismografo}"></td>
+                    <td>
+                        <input type="radio" name="idOrden" th:value="${orden.numeroOrden}" required>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn-primary">Continuar</button>
+    </form>
+</section>
+
+</body>
+</html>

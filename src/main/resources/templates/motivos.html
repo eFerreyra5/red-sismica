@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motivos Fuera de Servicio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <section class="form-section">
+        <h2>Motivos para Fuera de Servicio</h2>
+        <form action="confirmacion.html" method="POST">
+            <div class="motivo">
+                <label>
+                    <input type="checkbox" name="motivo[]" value="Falla mecánica"> Falla mecánica
+                </label>
+                <input type="text" name="comentario_falla_mecanica" placeholder="Comentario...">
+            </div>
+
+            <div class="motivo">
+                <label>
+                    <input type="checkbox" name="motivo[]" value="Falla eléctrica"> Falla eléctrica
+                </label>
+                <input type="text" name="comentario_falla_electrica" placeholder="Comentario...">
+            </div>
+
+            <div class="motivo">
+                <label>
+                    <input type="checkbox" name="motivo[]" value="Mantenimiento preventivo"> Mantenimiento preventivo
+                </label>
+                <input type="text" name="comentario_mantenimiento" placeholder="Comentario...">
+            </div>
+
+            <button type="submit" class="btn-primary">Confirmar Cierre</button>
+        </form>
+    </section>
+
+</body>
+</html>

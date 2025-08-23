@@ -120,13 +120,13 @@ VALUES ('Generador defectuoso que produce un cortocircuito', 1, 2);
 
 --Estaciones--
 INSERT INTO estacion_sismologica (documento_certificacion_adq, fecha_solicitud_certificacion, latitud, longitud, nombre, nro_certificacion_adquisicion, sismografo_id)
-VALUES ('doc1', '2005-05-25', '-34.6037', '-58.3816', 'Estación CABA', '123', 1);
+VALUES ('doc1', '2005-05-25', '-34.6037', '-58.3816', 'Estacion CABA', '123', 1);
 
 INSERT INTO estacion_sismologica (documento_certificacion_adq, fecha_solicitud_certificacion, latitud, longitud, nombre, nro_certificacion_adquisicion, sismografo_id)
-VALUES ('doc2', '2006-08-30', '40.7128', '-74.0060', 'Estación NY', '456', 2);
+VALUES ('doc2', '2006-08-30', '40.7128', '-74.0060', 'Estacion NY', '456', 2);
 
 INSERT INTO estacion_sismologica (documento_certificacion_adq, fecha_solicitud_certificacion, latitud, longitud, nombre, nro_certificacion_adquisicion, sismografo_id)
-VALUES ('doc3', '2010-12-01', '35.6895', '139.6917', 'Estación TOKIO', '789', 3);
+VALUES ('doc3', '2010-12-01', '35.6895', '139.6917', 'Estacion TOKIO', '789', 3);
 
 --Ordenes--
 INSERT INTO orden_inspeccion (fecha_hora_cierre, fecha_hora_finalizacion, fecha_hora_inicio, numero_orden, observacion_cierre, empleado_id, estado_id, estacion_id)
@@ -137,3 +137,9 @@ VALUES ('2024-05-20 12:00:00', '2024-05-10 12:00:00', '2024-05-10 08:00:00', '2'
 
 INSERT INTO orden_inspeccion (fecha_hora_cierre, fecha_hora_finalizacion, fecha_hora_inicio, numero_orden, observacion_cierre, empleado_id, estado_id, estacion_id)
 VALUES (NULL, '2024-03-20 12:00:00', '2024-03-20 08:00:00', '3', NULL, 1, 1, 3);
+
+INSERT INTO orden_inspeccion (fecha_hora_cierre, fecha_hora_finalizacion, fecha_hora_inicio, numero_orden, observacion_cierre, empleado_id, estado_id, estacion_id)
+VALUES (NULL, '2025-03-20 12:00:00', '2024-03-20 08:00:00', '4', NULL, 1, 1, 3);
+
+INSERT INTO orden_inspeccion (fecha_hora_cierre, fecha_hora_finalizacion, fecha_hora_inicio, numero_orden, observacion_cierre, empleado_id, estado_id, estacion_id)
+VALUES (NULL, '2022-03-20 12:00:00', '2024-03-20 08:00:00', '5', NULL, 1, 1, 3);
