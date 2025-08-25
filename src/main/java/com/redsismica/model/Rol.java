@@ -52,7 +52,7 @@ public class Rol {
     
     //metodo 61 secuencia
     public boolean esResponsableReparacion(){
-        return this.getNombre().equalsIgnoreCase("Responsable Reparacion");
+        return this.getNombre().equalsIgnoreCase("Responsable de Reparacion");
     }
 
     

@@ -2,6 +2,7 @@ package com.redsismica.controller;
 
 import com.redsismica.model.Empleado;
 import com.redsismica.model.Estado;
+import com.redsismica.model.MotivoTipo;
 import com.redsismica.model.OrdenDeInspeccion;
 import com.redsismica.service.GestorCierreOIService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,8 @@ public class GestorCierreOIController {
 
     // Paso 24-25: motivos tipo
     @GetMapping("/motivos")
-    public List<String> getMotivosTipo() {
-        return gestorService.habilitarActualizacionSismografo();
+    public List<MotivoTipo> getMotivosTipo() {
+        return gestorService.habilitarActualizacionSituacionSismografo();
     }
 
     // Paso 37: estado cerrada OI

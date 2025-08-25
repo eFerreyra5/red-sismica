@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cierre Exitoso</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <section class="form-section">
+        <div class="mensaje">
+            <p>Se ha cerrado con éxito la Orden de Inspección n° <strong th:text="${nroOrden}"></strong>.</p>
+            <p>Se han notificado a los siguientes responsables de reparación:</p>
+        </div>
+
+        <div class="emails">
+            <ul>
+                <li th:each="email : ${responsables}" th:text="${email}"></li>
+            </ul>
+        </div>
+
+        <div class="boton-container">
+            <button class="boton" th:onclick="|window.location.href='/'|">Volver al inicio</button>
+        </div>
+    </section>
+</body>
+</html>

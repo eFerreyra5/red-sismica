@@ -134,6 +134,7 @@ public class OrdenDeInspeccion {
         datosOI.add(this.getFechaHoraFinalizacion());
         datosOI.add(this.getEstacion().getNombre());
         datosOI.add(this.getEstacion().getIdentificadorSismografo());
+        datosOI.add(this.getEstacion().getSismografo().getId());
     
         return datosOI;
     }

@@ -1,40 +1,77 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Motivos Fuera de Servicio</title>
+    <title>MotivosTipo</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<section class="form-section">
+    <h2>MotivosTipo Asociados</h2>
 
-    <section class="form-section">
-        <h2>Motivos para Fuera de Servicio</h2>
-        <form action="confirmacion.html" method="POST">
-            <div class="motivo">
-                <label>
-                    <input type="checkbox" name="motivo[]" value="Falla mecánica"> Falla mecánica
-                </label>
-                <input type="text" name="comentario_falla_mecanica" placeholder="Comentario...">
-            </div>
+    <div th:if="${error}" class="error">
+        <p th:text="${error}"></p>
+    </div>
 
-            <div class="motivo">
-                <label>
-                    <input type="checkbox" name="motivo[]" value="Falla eléctrica"> Falla eléctrica
-                </label>
-                <input type="text" name="comentario_falla_electrica" placeholder="Comentario...">
-            </div>
-
-            <div class="motivo">
-                <label>
-                    <input type="checkbox" name="motivo[]" value="Mantenimiento preventivo"> Mantenimiento preventivo
-                </label>
-                <input type="text" name="comentario_mantenimiento" placeholder="Comentario...">
-            </div>
-
+    <form id="motivoForm" th:action="@{/tomar-sel-motivo}" method="POST">
+        <div th:each="motivo : ${motivos}" class="motivo">
+            <label>
+                <input type="checkbox" name="motivoId" th:value="${motivo.id}" class="motivo-checkbox">
+                <span th:text="${motivo.descripcion}">Motivo</span>
+            </label>
+            <input type="text" th:name="${'comentario_' + motivo.id}"
+                   th:value="${comentarios[motivo.id + ''] ?: ''}" 
+                   placeholder="Comentario..."
+                   class="comentario-input">
+        </div>
+        <div class="form-buttons" style="margin-top: 20px;"></div>
             <button type="submit" class="btn-primary">Confirmar Cierre</button>
-        </form>
-    </section>
+            <button type="button" class="btn-secondary" onclick="history.back()">Volver</button>
+        </div>
+        
+    </form>
+</section>
 
+<script>
+    const form = document.getElementById('motivoForm');
+
+    form.addEventListener('submit', function(event) {
+        const motivos = document.querySelectorAll('.motivo');
+        let atLeastOneChecked = false;
+        let valid = true;
+
+        motivos.forEach(motivo => {
+            const checkbox = motivo.querySelector('.motivo-checkbox');
+            const comentario = motivo.querySelector('.comentario-input');
+
+            if (checkbox.checked) {
+                atLeastOneChecked = true;
+                if (!comentario.value.trim()) {
+                    valid = false;
+                    comentario.style.border = "2px solid red";
+                } else {
+                    comentario.style.border = "";
+                }
+            } else {
+                if (comentario.value.trim()) {
+                    valid = false;
+                    comentario.style.border = "2px solid red";
+                } else {
+                    comentario.style.border = "";
+                }
+            }
+        });
+
+        if (!atLeastOneChecked) {
+            alert("Debe seleccionar al menos un MotivoTipo.");
+            valid = false;
+        }
+
+        if (!valid) {
+            event.preventDefault();
+            alert("Para cada MotivoTipo seleccionado debe ingresar un comentario, y no puede ingresar comentarios sin seleccionar el MotivoTipo.");
+        }
+    });
+</script>
 </body>
 </html>

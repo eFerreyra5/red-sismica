@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +8,33 @@
 </head>
 <body>
 
-    <section class="form-section">
-        <h2>Observaciones de Cierre</h2>
-        <form action="motivos.html" method="GET">
-            <textarea name="observaciones" placeholder="Ingrese las observaciones..." required></textarea>
+<section class="form-section">
+    <h2>Observaciones de Cierre</h2>
+    <form id="observacionForm" th:action="@{/ingresar-observaciones}" method="post">
+        <textarea name="observacionCierre" id="observacionCierre" placeholder="Ingrese las observaciones..."></textarea>
+        
+        <div class="form-buttons" style="margin-top: 20px;">
             <button type="submit" class="btn-primary">Continuar</button>
-        </form>
-    </section>
+            <button type="button" class="btn-secondary" onclick="history.back()">Volver</button>
+        </div>
+    </form>
+</section>
+
+<script>
+    const form = document.getElementById('observacionForm');
+    const textarea = document.getElementById('observacionCierre');
+
+    form.addEventListener('submit', function(event) {
+        if (!textarea.value.trim()) {
+            event.preventDefault();
+            alert("Debe ingresar una observación para continuar.");
+            textarea.style.border = "2px solid red";
+            textarea.focus();
+        } else {
+            textarea.style.border = ""; // limpia el borde si ya es válido
+        }
+    });
+</script>
 
 </body>
 </html>

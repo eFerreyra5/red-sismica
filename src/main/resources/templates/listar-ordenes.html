@@ -11,33 +11,71 @@
 <section class="form-section">
     <h2>Órdenes Completamente Realizadas</h2>
 
-    <form th:action="@{/seleccionar-orden}" method="post">
-        <table>
-            <thead>
-                <tr>
-                    <th>Número</th>
-                    <th>Fecha/Hora Finalización</th>
-                    <th>Estación Sismológica</th>
-                    <th>ID Sismógrafo</th>
-                    <th>Seleccionar</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="orden : ${ordenesCompRealizadas}">
-                    <td th:text="${orden.numeroOrden}"></td>
-                    <td th:text="${orden.fechaHoraFinalizacion}"></td>
-                    <td th:text="${orden.estacion.nombre}"></td>
-                    <td th:text="${orden.estacion.identificadorSismografo}"></td>
-                    <td>
-                        <input type="radio" name="idOrden" th:value="${orden.numeroOrden}" required>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <form id="ordenForm" th:action="@{/seleccionar-orden}" method="post">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Fecha/Hora Inicio</th>
+                        <th>Fecha/Hora Finalización</th>
+                        <th>Responsable</th>
+                        <th>Estación Sismológica</th>
+                        <th>ID Sismógrafo</th>
+                        <th>Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="orden : ${ordenesCompRealizadas}">
+                        <td th:text="${orden.numeroOrden}"></td>
+                        <td th:text="${#temporals.format(orden.fechaHoraInicio, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${#temporals.format(orden.fechaHoraFinalizacion, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${orden.empleado.nombre + ' ' + orden.empleado.apellido}"></td>
+                        <td th:text="${orden.estacion.nombre}"></td>
+                        <td th:text="${orden.estacion.sismografo.identificadorSismografo}"></td>
+                        <td>
+                            <input type="radio" name="idOrden" th:value="${orden.numeroOrden}" class="orden-radio">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        <button type="submit" class="btn-primary">Continuar</button>
+        <div class="form-buttons" style="margin-top: 20px;">
+            <button type="submit" class="btn-primary">Continuar</button>
+            <button type="button" class="btn-secondary" onclick="history.back()">Volver</button>
+        </div>
     </form>
 </section>
+
+<script>
+    const form = document.getElementById('ordenForm');
+    const radios = document.querySelectorAll('.orden-radio');
+    let lastChecked = null;
+
+    radios.forEach(radio => {
+        radio.addEventListener('click', function() {
+            if (lastChecked === this) {
+                this.checked = false;
+                lastChecked = null;
+            } else {
+                lastChecked = this;
+            }
+        });
+    });
+
+    form.addEventListener('submit', function(event) {
+        let selected = false;
+        radios.forEach(radio => {
+            if (radio.checked) selected = true;
+        });
+
+        if (!selected) {
+            event.preventDefault();
+            alert("Debe seleccionar una orden para continuar.");
+        }
+    });
+</script>
 
 </body>
 </html>

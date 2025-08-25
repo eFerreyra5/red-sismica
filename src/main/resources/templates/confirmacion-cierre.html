@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Cierre</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<section class="form-section">
+    <h2>Confirmación de Cierre</h2>
+    <p>¿Está seguro de que desea cerrar la orden?</p>
+
+    <form th:action="@{/tomar-confirmacion-cierre}" method="POST">
+        <div th:each="id : ${idsSeleccionados}">
+            <input type="hidden" name="motivoId" th:value="${id}" />
+            <input type="hidden" th:name="${'comentario_' + id}" th:value="${comentarios[id + '']}" />
+        </div>
+
+        <button type="submit" class="btn-primary">Sí, cerrar orden</button>
+        <a href="/motivos" class="btn-secondary">No, volver</a>
+    </form>
+</section>
+</body>
+</html>

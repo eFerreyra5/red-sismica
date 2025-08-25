@@ -1,7 +1,9 @@
 package com.redsismica.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.time.LocalDateTime;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.redsismica.model.Empleado;
 import com.redsismica.model.Estado;
+import com.redsismica.model.MotivoTipo;
 import com.redsismica.model.OrdenDeInspeccion;
 import com.redsismica.model.Sesion;
 import com.redsismica.model.Sismografo;
@@ -34,6 +37,8 @@ public class GestorCierreOIService {
     private List<List<Object>> datosOI = new ArrayList<>();
     List<OrdenDeInspeccion> ordenesOrdenadas = new ArrayList<>();
     private OrdenDeInspeccion ordenSeleccionada;
+    private List<MotivoTipo> motivosSeleccionados = new ArrayList<>();
+    private Map<Long, String> comentariosPorMotivo = new HashMap<>();
     private Estado estadoCerradaOI;
     private LocalDateTime fechaHoraActual;
     private String observacionCierre;
@@ -63,6 +68,10 @@ public class GestorCierreOIService {
     public void setOrdenSeleccionada(Long idOrden) {
         this.ordenSeleccionada = ordenDeInspeccionRepository.findById(idOrden)
             .orElseThrow(() -> new RuntimeException("Orden de Inspección no encontrada"));
+    }
+
+    public OrdenDeInspeccion getOrdenSeleccionada() {
+        return this.ordenSeleccionada;
     }
 
     //metodo 3 secuencia
@@ -120,19 +129,84 @@ public class GestorCierreOIService {
         this.ordenSeleccionada = orden;
     }
 
+    //metodo 23 secuencia
+    public void tomarIngresoObservaciones(String observacion) {
+        this.observacionCierre = observacion;
+    }
+
     //metodo 24 secuencia
-    public List<String> habilitarActualizacionSismografo() {
+    public List<MotivoTipo> habilitarActualizacionSituacionSismografo() {
         return buscarMotivoTipo();
     }
 
     //metodo 25 secuencia
-    public List<String> buscarMotivoTipo() {
-        List<String> descripciones = new ArrayList<>();
-        motivoTipoRepository.findAll().forEach(motivo -> {
-            descripciones.add(motivo.getDescripcion());
-        });
-        return descripciones;
+    public List<MotivoTipo> buscarMotivoTipo() {
+        return motivoTipoRepository.findAll();
     }
+
+    //metodo 29 secuencia
+    public void tomarSelMotivoTipo(List<Long> idsSeleccionados) {
+        motivosSeleccionados.clear();
+        comentariosPorMotivo.clear();
+
+        for (Long id : idsSeleccionados) {
+            MotivoTipo motivo = motivoTipoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Motivo no encontrado con id " + id));
+            motivosSeleccionados.add(motivo);
+        }
+    }
+
+    //metodo 31 secuencia
+    public void tomarIngresoComentario(Long motivoId, String comentario) {
+        comentariosPorMotivo.put(motivoId, comentario);
+    }
+
+    // método 35 secuencia actualizado
+    public void tomarConfirmacionCierre(OrdenDeInspeccion orden, Empleado empleado) {
+        // Validar motivos y comentarios
+        if (motivosSeleccionados == null || motivosSeleccionados.isEmpty()) {
+            throw new IllegalStateException("Debe seleccionar al menos un motivo para cerrar la OI.");
+        }
+
+        boolean hayComentario = comentariosPorMotivo.values().stream()
+                .anyMatch(comentario -> comentario != null && !comentario.isBlank());
+
+        if (!hayComentario) {
+            throw new IllegalStateException("Debe ingresar al menos un comentario para cerrar la OI.");
+        }
+
+        // Actualizar estados y fecha
+        buscarEstadoCerradaOI();
+        getFechaHoraActual();
+
+        // Cerrar la OI
+        cerrarOI(orden);
+
+        // Preparar sismógrafo para reparación
+        buscarEstadoFueraDeServicioSismografo();
+        this.empleadoLogueado = empleado; // importante para ponerFueraDeServicioSismografo
+        ponerFueraDeServicioSismografo();
+    }
+
+    // // metodo 36 secuencia
+    // public void validarDatosMinimos(OrdenDeInspeccion orden) {
+    //     if (motivosSeleccionados == null || motivosSeleccionados.isEmpty()) {
+    //         throw new IllegalStateException("Debe seleccionar al menos un motivo para cerrar la OI.");
+    //     }
+
+    //     boolean hayComentario = comentariosPorMotivo.values().stream()
+    //                         .anyMatch(comentario -> comentario != null && !comentario.isBlank());
+
+    //     if (!hayComentario) {
+    //         throw new IllegalStateException("Debe ingresar al menos un comentario para cerrar la OI.");
+    //     }
+
+    //     this.buscarEstadoCerradaOI();
+    //     this.getFechaHoraActual();
+    //     this.cerrarOI(orden);  // ahora usamos la orden pasada como parámetro
+    //     this.buscarEstadoFueraDeServicioSismografo();
+    //     this.ponerFueraDeServicioSismografo();
+    // }
 
     //metodo 37 secuencia
     public Estado buscarEstadoCerradaOI() {
@@ -200,12 +274,28 @@ public class GestorCierreOIService {
     }
 
     //metodo 50 secuencia
+    // public List<String> buscarEmailRR() {
+    //     List<String> emailsRR = new ArrayList<>();
+    //     empleadoRepository.findAll().forEach(empleado -> {
+    //         if (empleado.esResponsableReparacion()) {
+    //             emailsRR.add(empleado.getMail());
+    //         }
+    //     });
+    //     return emailsRR;
+    // }
     public List<String> buscarEmailRR() {
-        empleadoRepository.findAll().forEach(empleado -> {
-            if (empleado.esResponsableReparacion()) {
-                emailsRR.add(empleado.getMail());
-            }
-        });
-        return emailsRR;
+        // Obtener todos los empleados que sean responsables de reparación
+        List<Empleado> responsablesReparacion = empleadoRepository.findAll()
+            .stream()
+            .filter(Empleado::esResponsableReparacion) // método que retorna true si es responsable
+            .toList();
+
+        // Mostrar en consola los emails encontrados
+        responsablesReparacion.forEach(e -> System.out.println("Email RR: " + e.getMail()));
+    
+        // Mapear a lista de emails
+        return responsablesReparacion.stream()
+            .map(Empleado::getMail)
+            .toList();
     }
 }

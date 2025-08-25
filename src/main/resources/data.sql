@@ -85,13 +85,13 @@ VALUES ('Sismografo', 'DeBaja');
 
 --Motivos tipo--
 INSERT INTO motivo_tipo (descripcion)
-VALUES ('Falla eléctrica');
+VALUES ('Falla electrica');
 
 INSERT INTO motivo_tipo (descripcion)
-VALUES ('Averías generales');
+VALUES ('Averias generales');
 
 INSERT INTO motivo_tipo (descripcion)
-VALUES ('Defectos de fábrica');
+VALUES ('Defectos de fabrica');
 
 --Sismografos--
 INSERT INTO sismografo (fecha_adquisicion, identificador_sismografo, nro_serie, estado_actual_id)
