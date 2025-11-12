@@ -121,4 +121,5 @@ textarea, input[type="text"] {
     justify-content: space-between;
     margin-top: 20px;
     gap: 10px;
+    flex-direction: row-reverse; /* invierte el orden visual */
 }
