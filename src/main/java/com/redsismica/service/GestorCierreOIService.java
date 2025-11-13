@@ -15,6 +15,9 @@ import com.redsismica.model.MotivoTipo;
 import com.redsismica.model.OrdenDeInspeccion;
 import com.redsismica.model.Sesion;
 import com.redsismica.model.Sismografo;
+import com.redsismica.patron_iterator.IAgregado;
+import com.redsismica.patron_iterator.IIterador;
+import com.redsismica.patron_iterator.IteradorOI;
 import com.redsismica.repository.EmpleadoRepository;
 import com.redsismica.repository.SesionRepository;
 import com.redsismica.repository.OrdenDeInspeccionRepository;
@@ -23,7 +26,7 @@ import com.redsismica.repository.MotivoTipoRepository;
 import com.redsismica.repository.EstadoRepository;
 
 @Service
-public class GestorCierreOIService {
+public class GestorCierreOIService implements IAgregado{
 
     private final SesionRepository sesionRepository;
     private final OrdenDeInspeccionRepository ordenDeInspeccionRepository;
@@ -89,23 +92,58 @@ public class GestorCierreOIService {
         throw new RuntimeException("No hay sesión activa");
     }
 
-    //metodo 7 secuencia
-    public List<OrdenDeInspeccion> buscarOICompRealizadas(Empleado empleado) {
-        ordenesCompRealizadas.clear();
-        datosOI.clear();
+    //metodo 7 secuencia (SE COMENTA ESTE METODO YA QUE CORRESPONDE AL ANALISIS, AQUI VA LA IMPLEMENTACION DEL PATRON)
+    // public List<OrdenDeInspeccion> buscarOICompRealizadas(Empleado empleado) {
+    //     ordenesCompRealizadas.clear();
+    //     datosOI.clear();
         
-        for (OrdenDeInspeccion orden : ordenDeInspeccionRepository.findAll()) {
-            if (orden.esDeEmpleado(empleado)) {
-                if (orden.esCompRealizada()) {
-                    ordenesCompRealizadas.add(orden);
-                    List<Object> datosOrden = orden.getDatosOI();
-                    datosOI.add(datosOrden);
-                }
-            }
+    //     for (OrdenDeInspeccion orden : ordenDeInspeccionRepository.findAll()) {
+    //         if (orden.esDeEmpleado(empleado)) {
+    //             if (orden.esCompRealizada()) {
+    //                 ordenesCompRealizadas.add(orden);
+    //                 List<Object> datosOrden = orden.getDatosOI();
+    //                 datosOI.add(datosOrden);
+    //             }
+    //         }
+    //     }
+    //     return ordenesCompRealizadas;
+    // }
+
+    public IIterador crearIterador(Object[] elementos, Object[] filtros) {
+
+        // Convertir manualmente cada elemento a OrdenDeInspeccion
+
+        OrdenDeInspeccion[] ordenes = new OrdenDeInspeccion[elementos.length];
+        for (int i = 0; i < elementos.length; i++) {
+            ordenes[i] = (OrdenDeInspeccion) elementos[i];
         }
-        return ordenesCompRealizadas;
+
+        return new IteradorOI(elementos, filtros);
     }
 
+    public  List<OrdenDeInspeccion> buscarOICompRealizadas(Empleado empleado) {
+
+        ordenesCompRealizadas.clear();
+        datosOI.clear();
+
+        List<OrdenDeInspeccion> ordenes = ordenDeInspeccionRepository.findAll();
+        Object[] filtros = new Object[] { empleado };
+        IIterador iterador = crearIterador(ordenes.toArray(), filtros);
+
+        while (!iterador.haFinalizado()) {
+            OrdenDeInspeccion oi = (OrdenDeInspeccion) iterador.actual();
+    
+            if (iterador.cumpleFiltro(filtros)) {
+                ordenesCompRealizadas.add(oi);
+                List<Object> datosOrden = oi.getDatosOI();
+                datosOI.add(datosOrden);
+            }
+    
+            iterador.siguiente();
+        }
+        return ordenesCompRealizadas;
+    } 
+    
     //metodo 17 secuencia
     public List<OrdenDeInspeccion> ordenarDatosPorFechaFinalizacion(List<OrdenDeInspeccion> ordenes) {
         // Crear una copia de la lista para no modificar la original

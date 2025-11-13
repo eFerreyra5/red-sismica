@@ -8,7 +8,8 @@
 </head>
 <body>
 
-<section class="form-section">
+<section class="form-section" 
+         th:if="${ordenesCompRealizadas != null and !ordenesCompRealizadas.isEmpty()}">
     <h2>Órdenes Completamente Realizadas</h2>
 
     <form id="ordenForm" th:action="@{/seleccionar-orden}" method="post">
@@ -48,33 +49,49 @@
     </form>
 </section>
 
+<!-- Si NO hay órdenes completamente realizadas -->
+<section class="form-section" 
+         th:if="${ordenesCompRealizadas == null or ordenesCompRealizadas.isEmpty()}">
+    <h2>Órdenes Completamente Realizadas</h2>
+
+    <p class="error">No se encontraron órdenes completamente realizadas para su usuario.</p>
+
+    <div class="form-buttons" style="justify-content: center;">
+        <button type="button" class="btn-secondary" onclick="window.location.href='/'">
+            Volver al inicio
+        </button>
+    </div>
+</section>
+
 <script>
     const form = document.getElementById('ordenForm');
-    const radios = document.querySelectorAll('.orden-radio');
-    let lastChecked = null;
+    if (form) {
+        const radios = document.querySelectorAll('.orden-radio');
+        let lastChecked = null;
 
-    radios.forEach(radio => {
-        radio.addEventListener('click', function() {
-            if (lastChecked === this) {
-                this.checked = false;
-                lastChecked = null;
-            } else {
-                lastChecked = this;
+        radios.forEach(radio => {
+            radio.addEventListener('click', function() {
+                if (lastChecked === this) {
+                    this.checked = false;
+                    lastChecked = null;
+                } else {
+                    lastChecked = this;
+                }
+            });
+        });
+
+        form.addEventListener('submit', function(event) {
+            let selected = false;
+            radios.forEach(radio => {
+                if (radio.checked) selected = true;
+            });
+
+            if (!selected) {
+                event.preventDefault();
+                alert("Debe seleccionar una orden para continuar.");
             }
         });
-    });
-
-    form.addEventListener('submit', function(event) {
-        let selected = false;
-        radios.forEach(radio => {
-            if (radio.checked) selected = true;
-        });
-
-        if (!selected) {
-            event.preventDefault();
-            alert("Debe seleccionar una orden para continuar.");
-        }
-    });
+    }
 </script>
 
 </body>
