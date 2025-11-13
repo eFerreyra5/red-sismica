@@ -38,7 +38,7 @@ public class GestorCierreOIService implements IAgregado{
     private Empleado empleadoLogueado;
     private List<OrdenDeInspeccion> ordenesCompRealizadas = new ArrayList<>();
     private List<List<Object>> datosOI = new ArrayList<>();
-    List<OrdenDeInspeccion> ordenesOrdenadas = new ArrayList<>();
+    private List<OrdenDeInspeccion> ordenesOrdenadas = new ArrayList<>();
     private OrdenDeInspeccion ordenSeleccionada;
     private List<MotivoTipo> motivosSeleccionados = new ArrayList<>();
     private Map<Long, String> comentariosPorMotivo = new HashMap<>();
@@ -48,7 +48,7 @@ public class GestorCierreOIService implements IAgregado{
     private Estado estadoFDSSismografo;
     private long idSismografo;
     private Sismografo sismografo;
-    List<String> emailsRR = new ArrayList<>();
+    private List<String> emailsRR = new ArrayList<>();
 
 
     public GestorCierreOIService(
